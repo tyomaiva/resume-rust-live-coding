@@ -29,3 +29,28 @@ serde_json = "1.0.64"
 
 cargo run --bin client
 cargo run --bin client -- --name Jip --position "HW Engineer"
+
+* Step 3: trivial TCP server
+server.rs (first without Err matching):
+use std::net::TcpListener;
+
+fn main() {
+    let listener = TcpListener::bind("127.0.0.1:9000").expect("Cannot listen to the port");
+    for stream_res in listener.incoming() {
+        match stream_res {
+            Ok(mut stream) => {
+                println!("New client is accepted!");
+            }
+            Err(e) => {
+                println!("Reception failed: {:?}", e);
+            }
+        }
+    }
+    println!("Finished.");
+}
+
+
+In one terminal, run:
+cargo run --bin server
+In another terminal, run several times in a row:
+cargo run --bin client -q -- --name Jip --position "SW developer"
