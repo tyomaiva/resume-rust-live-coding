@@ -1,0 +1,22 @@
+* Step 1
+cargo init resume-live-coding
+cd resume-live-coding/src
+mkdir bin/
+cp main.rs bin/server.rs
+mv main.rs bin/client.rs
+
+
+Cargo.toml:
+[[[[bin]]]]
+name = "server"
+
+[[[[bin]]]]
+name = "client"
+
+
+cargo run --bin server
+cargo run --bin client
+
+
+* Step 2
+
