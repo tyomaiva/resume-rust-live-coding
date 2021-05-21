@@ -19,4 +19,13 @@ cargo run --bin client
 
 
 * Step 2
+Replace client.rs with the final implementation
+Copy cli.yml
 
+Add to Cargo.toml after [dependencies]:
+clap = { version = "2.33.3", features = ["yaml"] }
+serde = { version = "1.0.125", features = ["derive"] }
+serde_json = "1.0.64"
+
+cargo run --bin client
+cargo run --bin client -- --name Jip --position "HW Engineer"

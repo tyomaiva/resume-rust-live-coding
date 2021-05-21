@@ -1,0 +1,19 @@
+name: Resume management client
+version: "0.1"
+author: Artem Ivashko
+about: Uploads resume to server
+args:
+    - name:
+        short: n
+        long: name
+        value_name: name
+        help: Name of the employee
+        takes_value: true
+        required: true
+    - position:
+        short: p
+        long: position
+        value_name: position
+        help: Position of the employee
+        takes_value: true
+        required: true
