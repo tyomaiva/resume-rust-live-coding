@@ -3,9 +3,10 @@ use std::sync::mpsc::channel;
 use std::io::Read;
 
 use threadpool::ThreadPool;
-
+use serde::Deserialize;
 
 /// Encodes the employee data like the position
+#[derive(PartialEq, Debug, Deserialize)]
 struct Employee {
     name: String,
     position: String,
@@ -13,7 +14,9 @@ struct Employee {
 
 /// Parse the JSON request and send it further to database
 fn execute_request(received_bytes: Vec<u8>, db_sender: std::sync::mpsc::Sender<Employee>) {
-    println!("{:?}", received_bytes);
+    let received_string = std::str::from_utf8(&received_bytes).unwrap();
+    let e: Employee = serde_json::from_str(received_string).unwrap();
+    db_sender.send(e).unwrap();
 }
 
 
@@ -39,4 +42,28 @@ fn main() {
         }
     }
     println!("Finished.");
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_execute_request() {
+        let (sender, receiver) = channel::<Employee>();
+        execute_request(
+            "{\"name\": \"my-name\", \"position\":\"my-position\"}"
+                .as_bytes()
+                .to_vec(),
+            sender,
+        );
+        assert_eq!(
+            receiver.recv().unwrap(),
+            Employee {
+                name: String::from("my-name"),
+                position: String::from("my-position"),
+            }
+        );
+    }
 }

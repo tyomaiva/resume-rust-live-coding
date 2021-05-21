@@ -90,3 +90,40 @@ fn execute_request(received_bytes: Vec<u8>, db_sender: std::sync::mpsc::Sender<E
 
 Add to Cargo.toml:
 threadpool = "1.8.1"
+
+* Step 5: added unit test
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_execute_request() {
+        let (sender, receiver) = channel::<Employee>();
+        execute_request(
+            "{\"name\": \"my-name\", \"position\":\"my-position\"}"
+                .as_bytes()
+                .to_vec(),
+            sender,
+        );
+        assert_eq!(
+            receiver.recv().unwrap(),
+            Employee {
+                name: String::from("my-name"),
+                position: String::from("my-position"),
+            }
+        );
+    }
+}
+
+
+cargo test
+
+
+    let received_string = std::str::from_utf8(&received_bytes).unwrap();
+    let e: Employee = serde_json::from_str(received_string).unwrap();
+    db_sender.send(e).unwrap();
+
+
+Derive Deserialize
+use serde::Deserialize;
+cargo test
