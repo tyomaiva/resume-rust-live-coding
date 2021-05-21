@@ -54,3 +54,39 @@ In one terminal, run:
 cargo run --bin server
 In another terminal, run several times in a row:
 cargo run --bin client -q -- --name Jip --position "SW developer"
+
+
+* Step 4: prototype of multi-threaded request execution
+server.rs:
+use std::sync::mpsc::channel;
+use std::io::Read;
+
+use threadpool::ThreadPool;
+
+
+/// Encodes the employee data like the position
+struct Employee {
+    name: String,
+    position: String,
+}
+
+/// Parse the JSON request and send it further to database
+fn execute_request(received_bytes: Vec<u8>, db_sender: std::sync::mpsc::Sender<Employee>) {
+    println!("{:?}", received_bytes);
+}
+
+
+    let pool = ThreadPool::new(8);
+    let (sender, receiver) = channel::<Employee>();
+
+    let mut buffer = [0u8; 2048];
+
+
+                let message_size = stream.read(&mut buffer).unwrap();
+                let received = buffer[..message_size].to_vec();
+                let sender_copy = sender.clone();
+                pool.execute(move || execute_request(received, sender_copy));
+ 
+
+Add to Cargo.toml:
+threadpool = "1.8.1"
