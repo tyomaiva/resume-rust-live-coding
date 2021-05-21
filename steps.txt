@@ -53,7 +53,7 @@ fn main() {
 In one terminal, run:
 cargo run --bin server
 In another terminal, run several times in a row:
-cargo run --bin client -q -- --name Jip --position "SW developer"
+cargo run --bin client -q -- --name Jip --position "HW engineer"
 
 
 * Step 4: prototype of multi-threaded request execution
@@ -127,3 +127,26 @@ cargo test
 Derive Deserialize
 use serde::Deserialize;
 cargo test
+
+
+* Step 6: database mock added
+    // Database thread
+    pool.execute(move || update_database(receiver));
+
+
+/// Update the database with a new employee
+fn update_database(receiver: std::sync::mpsc::Receiver<Employee>) {
+    let mut state = HashMap::new();
+    loop {
+        let new_emp = receiver.recv().unwrap();
+        state.insert(new_emp.name.clone(), new_emp);
+        println!("Database state: {:?}", state);
+    }
+}
+
+use std::collections::HashMap;
+
+
+cargo run --bin server
+cargo run --bin client -q -- --name Jip --position "HW engineer"
+cargo run --bin client -q -- --name Janneke --position "SW architect"

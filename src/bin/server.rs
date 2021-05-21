@@ -1,6 +1,7 @@
 use std::net::TcpListener;
 use std::sync::mpsc::channel;
 use std::io::Read;
+use std::collections::HashMap;
 
 use threadpool::ThreadPool;
 use serde::Deserialize;
@@ -19,12 +20,24 @@ fn execute_request(received_bytes: Vec<u8>, db_sender: std::sync::mpsc::Sender<E
     db_sender.send(e).unwrap();
 }
 
+/// Update the database with a new employee
+fn update_database(receiver: std::sync::mpsc::Receiver<Employee>) {
+    let mut state = HashMap::new();
+    loop {
+        let new_emp = receiver.recv().unwrap();
+        state.insert(new_emp.name.clone(), new_emp);
+        println!("Database state: {:?}", state);
+    }
+}
 
 fn main() {
     let listener = TcpListener::bind("127.0.0.1:9000").expect("Cannot listen to the port");
 
     let pool = ThreadPool::new(8);
     let (sender, receiver) = channel::<Employee>();
+
+    // Database thread
+    pool.execute(move || update_database(receiver));
 
     let mut buffer = [0u8; 2048];
     for stream_res in listener.incoming() {
