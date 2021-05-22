@@ -1,3 +1,5 @@
+//! Back-end server application that updates the database of employees.
+
 use std::net::TcpListener;
 use std::sync::mpsc::channel;
 use std::io::Read;

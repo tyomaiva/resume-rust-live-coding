@@ -150,3 +150,10 @@ use std::collections::HashMap;
 cargo run --bin server
 cargo run --bin client -q -- --name Jip --position "HW engineer"
 cargo run --bin client -q -- --name Janneke --position "SW architect"
+
+
+* Step 7: browse generated documentation
+//! Back-end server application that updates the database of employees.
+
+
+cargo doc --open
