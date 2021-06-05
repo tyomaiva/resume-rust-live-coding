@@ -7,10 +7,10 @@ mv main.rs bin/client.rs
 
 
 Cargo.toml:
-[[[[bin]]]]
+[[bin]]
 name = "server"
 
-[[[[bin]]]]
+[[bin]]
 name = "client"
 
 
@@ -114,6 +114,9 @@ mod tests {
         );
     }
 }
+
+
+Derive Debug and PartialEq for Employee
 
 
 cargo test
